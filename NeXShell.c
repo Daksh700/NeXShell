@@ -23,7 +23,7 @@ int main()
     struct timeval start, end;
 
     // Maintain a whitelist of supported commands for validation and suggestions
-    const char *valid_commands[] = {"cd", "exit", "clear", "history", "ls", "pwd", "whoami", "ps", "echo", "cat", "touch", "mkdir", NULL};
+    const char *valid_commands[] = {"cd", "exit", "clear", "history", "ls", "ls *.txt", "pwd", "whoami", "ps", "echo", "cat", "touch", "mkdir", NULL};
 
     // Map user-friendly phrases to actual shell commands (rudimentary NLP support)
     char *nl_phrases[][2] = {
