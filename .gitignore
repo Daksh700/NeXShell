@@ -1,3 +1,6 @@
 a.out
-*.swp
 *.o
+*.swp
+*.log
+*.tmp
+.DS_Store
