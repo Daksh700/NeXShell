@@ -136,24 +136,35 @@ int main()
                 continue;
             }
 
-            char command[256];
+            char checkCmd[256];
+            char installCmd[256];
+            int isInstalled = 0;
 
             #ifdef __APPLE__
-                snprintf(command, sizeof(command), "brew install %s", args[1]);
+                snprintf(checkCmd, sizeof(checkCmd), "brew list %s > /dev/null 2>&1", args[1]);
+                snprintf(installCmd, sizeof(installCmd), "brew install %s", args[1]);
             #elif __linux__
-                snprintf(command, sizeof(command), "sudo apt install %s -y", args[1]);
+                snprintf(checkCmd, sizeof(checkCmd), "dpkg -s %s > /dev/null 2>&1", args[1]);
+                snprintf(installCmd, sizeof(installCmd), "sudo apt install %s -y", args[1]);
             #elif _WIN32
-                snprintf(command, sizeof(command), "choco install %s -y", args[1]);
+                snprintf(checkCmd, sizeof(checkCmd), "choco list --local-only | findstr /C:\"%s\" > nul", args[1]);
+                snprintf(installCmd, sizeof(installCmd), "choco install %s -y", args[1]);
             #else
                 printf("Unsupported platform.\n");
                 continue;
             #endif
 
-            printf("Running: %s\n", command);
-            int status = system(command);
-            if (status != 0) {
-                printf("Installation failed or aborted.\n");
+            // Check if the package is already installed
+            if (system(checkCmd) == 0) {
+                printf("%s is already installed.\n", args[1]);
+            } else {
+                printf("Installing %s...\n", args[1]);
+                int status = system(installCmd);
+                if (status != 0) {
+                    printf("Installation failed or aborted.\n");
+                }
             }
+
             continue;
         }
 
