@@ -23,7 +23,8 @@ int main()
     struct timeval start, end;
 
     // Maintain a whitelist of supported commands for validation and suggestions
-    const char *valid_commands[] = {"cd", "exit", "clear", "history", "ls", "ls *.txt", "pwd", "whoami", "ps", "echo", "cat", "touch", "mkdir", NULL};
+    const char *valid_commands[] = { "cd", "exit", "clear", "history", "ls", "ls *.txt", "pwd", "whoami", "ps", "echo", "cat", "touch", 
+    "mkdir", "install", "show files", "list text files", "current directory", "who am i", "show processes", "clear screen", NULL };
 
     // Map user-friendly phrases to actual shell commands (rudimentary NLP support)
     char *nl_phrases[][2] = {
@@ -126,6 +127,33 @@ int main()
         if (strcmp(args[0], "clear") == 0)
         {
             system("clear");
+            continue;
+        }
+
+        if (strcmp(args[0], "install") == 0) {
+            if (args[1] == NULL) {
+                printf("Please provide a package name to install.\n");
+                continue;
+            }
+
+            char command[256];
+
+            #ifdef __APPLE__
+                snprintf(command, sizeof(command), "brew install %s", args[1]);
+            #elif __linux__
+                snprintf(command, sizeof(command), "sudo apt install %s -y", args[1]);
+            #elif _WIN32
+                snprintf(command, sizeof(command), "choco install %s -y", args[1]);
+            #else
+                printf("Unsupported platform.\n");
+                continue;
+            #endif
+
+            printf("Running: %s\n", command);
+            int status = system(command);
+            if (status != 0) {
+                printf("Installation failed or aborted.\n");
+            }
             continue;
         }
 
