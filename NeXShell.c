@@ -130,6 +130,7 @@ int main()
             continue;
         }
 
+        // Cross-platform installation command with pre-check to avoid reinstalling already-installed packages
         if (strcmp(args[0], "install") == 0) {
             if (args[1] == NULL) {
                 printf("Please provide a package name to install.\n");
